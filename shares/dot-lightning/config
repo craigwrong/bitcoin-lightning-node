@@ -1,0 +1,3 @@
+bitcoin-rpcconnect=10.1.0.2
+wallet=sqlite3:///root/.lightning/bitcoin/lightningd.sqlite3:/ln-backup/lightningd.sqlite3
+important-plugin=/usr/bin/clboss

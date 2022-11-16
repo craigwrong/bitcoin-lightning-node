@@ -1,0 +1,5 @@
+.DS_Store
+/.gitconfig/user
+xcuserdata/
+/shares/lightning-api-certs/*
+!/shares/lightning-api-certs/.keep
