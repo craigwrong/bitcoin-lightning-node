@@ -2,7 +2,8 @@
 FROM debian as prep
 RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends --yes wget ca-certificates autoconf automake pkg-config libtool
 WORKDIR /opt
-RUN wget -qO- https://bitcoincore.org/bin/bitcoin-core-23.0/bitcoin-23.0.tar.gz | tar xzf - && \
+RUN \
+    wget -qO- https://bitcoincore.org/bin/bitcoin-core-23.0/bitcoin-23.0.tar.gz | tar xzf - && \
     mv bitcoin-23.0 bitcoin && \
     cd bitcoin && \
     ./autogen.sh
