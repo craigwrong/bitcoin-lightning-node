@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM debian as clboss-builder
-RUN apt-get update && apt-get -y upgrade && apt-get -y install --no-install-recommends ca-certificates wget build-essential pkg-config libev-dev libcurl4-gnutls-dev libsqulite3-dev
+RUN apt-get update && apt-get -y upgrade && apt-get -y install --no-install-recommends ca-certificates wget build-essential pkg-config libev-dev libcurl4-gnutls-dev libsqlite3-dev
 WORKDIR /root
 RUN \
     wget -qO- https://github.com/ZmnSCPxj/clboss/files/8596285/clboss-0.12.tar.gz | tar xzf - && \
