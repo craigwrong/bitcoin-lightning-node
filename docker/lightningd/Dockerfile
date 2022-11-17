@@ -13,7 +13,7 @@ FROM ubuntu
 COPY --from=bitcoin-cli /bin/bitcoin-cli /usr/local/bin/bitcoin-cli
 RUN \
     apt-get update && apt-get -y upgrade && \
-    DEBIAN_FRONTEND=noninteractive TZ="Europe/Lisbon" apt-get install -y --no-install-recommends tzdata dnsutils libev libcurl4-gnutls libsqlite3 && \
+    DEBIAN_FRONTEND=noninteractive TZ="Europe/Lisbon" apt-get install -y --no-install-recommends tzdata dnsutils libev4 libcurl3-gnutls libsqlite3-0 && \
     apt-get install -y --no-install-recommends gpg-agent software-properties-common && \
     add-apt-repository -y -u ppa:lightningnetwork/ppa && \
         apt-get -y install --no-install-recommends lightningd
