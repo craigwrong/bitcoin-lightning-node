@@ -3,3 +3,7 @@
 xcuserdata/
 /shares/lightning-api-certs/*
 !/shares/lightning-api-certs/.keep
+/shares/testnet/lightning-api-certs/*
+!/shares/testnet/lightning-api-certs/.keep
+/shares/testnet/ln-backup/*
+!/shares/testnet/ln-backup/.keep
