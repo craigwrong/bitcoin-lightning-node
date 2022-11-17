@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker exec -it lightningd lightning-cli getinfo
+docker exec -it lightningd-testnet lightning-cli getinfo
