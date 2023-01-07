@@ -1,26 +1,47 @@
 # syntax=docker/dockerfile:1
-FROM debian as prep
-RUN apt-get update && apt-get -y upgrade && apt-get install --no-install-recommends --yes wget ca-certificates autoconf automake pkg-config libtool
+
+FROM debian as base
+RUN \
+    apt-get update && \
+    apt-get --yes upgrade
+
+FROM base as prep
+ENV BITCOIN_CORE_VERSION=24.0.1
+# Pieter Wuille
+ENV SIGNATURE1=133EAC179436F14A5CF1B794860FEB804E669320
+ # Michael Ford
+ENV SIGNATURE2=E777299FC265DD04793070EB944D35F9AC3DB76A
+ # Andrew Chow
+ENV SIGNATURE3=152812300785C96444D3334D17565732E08E5E41
 WORKDIR /opt
 RUN \
-    wget -qO- https://bitcoincore.org/bin/bitcoin-core-23.0/bitcoin-23.0.tar.gz | tar xzf - && \
-    mv bitcoin-23.0 bitcoin && \
+    apt-get --yes install --no-install-recommends wget ca-certificates unzip gnupg autoconf automake pkg-config libtool && \
+    wget -q https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_CORE_VERSION/bitcoin-$BITCOIN_CORE_VERSION.tar.gz && \
+    wget -q https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_CORE_VERSION/SHA256SUMS && \
+    wget -q https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_CORE_VERSION/SHA256SUMS.asc && \
+    sha256sum --ignore-missing -c SHA256SUMS && \
+    gpg --recv-keys $SIGNATURE1 $SIGNATURE2 $SIGNATURE3 && \
+    gpg --status-fd 1 --verify SHA256SUMS.asc SHA256SUMS 2>/dev/null | grep -q "GOODSIG" || exit 1 && \
+    rm SHA256SUMS.asc SHA256SUMS && \
+    tar xfz bitcoin-$BITCOIN_CORE_VERSION.tar.gz && \
+    rm bitcoin-$BITCOIN_CORE_VERSION.tar.gz && \
+    mv bitcoin-$BITCOIN_CORE_VERSION bitcoin && \
     cd bitcoin && \
     ./autogen.sh
 
-FROM debian as builder-base
-RUN apt-get update && apt-get -y upgrade && apt-get install --yes --no-install-recommends make g++ binutils
+FROM base as builder-base
+RUN apt-get --yes install --no-install-recommends make g++ binutils
 
 FROM builder-base as builder-depends
 COPY --from=prep /opt/bitcoin /opt/bitcoin
-RUN apt-get install --yes --no-install-recommends curl ca-certificates lbzip2
+RUN apt-get --yes install --no-install-recommends curl ca-certificates lbzip2
 WORKDIR /opt/bitcoin/depends
 RUN make NO_QT=1 NO_QR=1 NO_ZMQ=1 NO_WALLET=1 NO_BDB=1 NO_SQLITE=1 NO_UPNP=1 NO_NATPMP=1 NO_USDT=1
 
 FROM builder-base as builder
 COPY --from=prep /opt/bitcoin /opt/bitcoin
 COPY --from=builder-depends /opt/bitcoin/depends/x86_64-pc-linux-gnu /opt/bitcoin/depends/x86_64-pc-linux-gnu
-RUN apt-get install --yes --no-install-recommends pkg-config
+RUN apt-get --yes install --no-install-recommends pkg-config
 WORKDIR /opt/bitcoin
 RUN LDFLAGS="-static-libstdc++" ./configure \
         --prefix=`pwd`/depends/x86_64-pc-linux-gnu \

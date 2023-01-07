@@ -52,3 +52,19 @@ To stop and cleanup:
 
     scripts/testnet/stop-all
     scripts/testnet/clean-all
+
+
+## Cross-Compiling from macOS (Apple Sillicon) to x86
+
+To build images and run containers on an ARM-based Mac for x86 pass `--platform linux/amd64` to the docker command.
+
+For better x86 emulation performance use `colima` which supports Rosetta 2 and Virtualization Framework (as opposed to Docker Desktop's use of QEMU). Make sure you install Rosetta as well.
+
+    brew install colima --HEAD
+    colima start --arch aarch64 --vm-type=vz --vz-rosetta  --cpu 4 --memory 8
+    docker run --platform linux/amd64 --rm -it ubuntu
+    # In the new shell
+    uname -a
+    # Linux e7c3cb1e6650 5.15.82-0-virt #1-Alpine SMP Mon, 12 Dec 2022 09:15:17 +0000 x86_64 x86_64 x86_64 GNU/Linux
+    ps -fe
+    # root         1     0  0 23:01 pts/0    00:00:00 /mnt/lima-rosetta/rosetta /usr/bin/bash
