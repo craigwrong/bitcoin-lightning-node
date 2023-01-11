@@ -68,3 +68,9 @@ For better x86 emulation performance use `colima` which supports Rosetta 2 and V
     # Linux e7c3cb1e6650 5.15.82-0-virt #1-Alpine SMP Mon, 12 Dec 2022 09:15:17 +0000 x86_64 x86_64 x86_64 GNU/Linux
     ps -fe
     # root         1     0  0 23:01 pts/0    00:00:00 /mnt/lima-rosetta/rosetta /usr/bin/bash
+
+
+## Export / Import image
+
+    docker save bitcoind | gzip > bitcoind.tgz
+    docker load -i bitcoind.tgz
