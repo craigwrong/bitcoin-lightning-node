@@ -72,5 +72,11 @@ For better x86 emulation performance use `colima` which supports Rosetta 2 and V
 
 ## Export / Import image
 
+We can build the docker images on a workstation and then transfer them to the server.
+
     docker save bitcoind | gzip > bitcoind.tgz
     docker load -i bitcoind.tgz
+
+When building on a different architecture/platform like an Apple Silicon Mac, make sure you pass the `--platform=linux/amd64` to the Docker commands if that's your target (i.e. server) system.
+
+On ARM Macs we can use _Lima_ / _Colima_ and _Rossetta 2_ to emulate x86 efficiently and target said platform.
