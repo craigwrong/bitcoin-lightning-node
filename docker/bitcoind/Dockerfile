@@ -40,11 +40,12 @@ RUN make NO_QT=1 NO_QR=1 NO_ZMQ=1 NO_WALLET=1 NO_BDB=1 NO_SQLITE=1 NO_UPNP=1 NO_
 
 FROM builder-base as builder
 COPY --from=prep /opt/bitcoin /opt/bitcoin
-COPY --from=builder-depends /opt/bitcoin/depends/x86_64-pc-linux-gnu /opt/bitcoin/depends/x86_64-pc-linux-gnu
+COPY --from=builder-depends /opt/bitcoin/depends/x86_64-pc-linux-gnu /opt/bitcoin/depends
+# COPY --from=builder-depends /opt/bitcoin/depends/aarch64-unknown-linux-gnu /opt/bitcoin/depends
 RUN apt-get --yes install --no-install-recommends pkg-config
 WORKDIR /opt/bitcoin
 RUN LDFLAGS="-static-libstdc++" ./configure \
-        --prefix=`pwd`/depends/x86_64-pc-linux-gnu \
+        --prefix=`pwd`/depends \
         --without-wallet --without-sqlite --without-bdb --without-gui --without-libs \
         --disable-tests --disable-bench --disable-external-signer \
         --enable-daemon --enable-util-cli --disable-util-tx --disable-util-wallet --disable-util-util && \
@@ -56,15 +57,21 @@ COPY --from=debian /lib/x86_64-linux-gnu/libm.so.6 /lib/libm.so.6
 COPY --from=debian /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/libgcc_s.so.1
 COPY --from=debian /lib/x86_64-linux-gnu/libc.so.6 /lib/libc.so.6
 COPY --from=debian /lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
+# COPY --from=debian /lib/aarch64-linux-gnu/libpthread.so.0 /lib/libpthread.so.0
+# COPY --from=debian /lib/aarch64-linux-gnu/libm.so.6 /lib/libm.so.6
+# COPY --from=debian /lib/aarch64-linux-gnu/libgcc_s.so.1 /lib/libgcc_s.so.1
+# COPY --from=debian /lib/aarch64-linux-gnu/libc.so.6 /lib/libc.so.6
+# COPY --from=debian /lib/aarch64-linux-gnu/ld-linux-aarch64.so.1  /lib/ld-linux-aarch64.so.1
+# COPY --from=debian /lib/aarch64-linux-gnu/ld-2.31.so  /lib/ld-2.31.so
 
 FROM scratch as daemon
 COPY --from=deps / /
-COPY --from=builder /opt/bitcoin/depends/x86_64-pc-linux-gnu/bin/bitcoind /bin/bitcoind
+COPY --from=builder /opt/bitcoin/depends/bin/bitcoind /bin/bitcoind
 VOLUME /.bitcoin
 ENTRYPOINT ["/bin/bitcoind"]
 
 FROM scratch as cli
 COPY --from=deps / /
-COPY --from=builder /opt/bitcoin/depends/x86_64-pc-linux-gnu/bin/bitcoin-cli /bin/bitcoin-cli
+COPY --from=builder /opt/bitcoin/depends/bin/bitcoin-cli /bin/bitcoin-cli
 VOLUME /.bitcoin
 ENTRYPOINT ["/bin/bitcoin-cli"]
