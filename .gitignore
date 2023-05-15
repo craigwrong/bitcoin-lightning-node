@@ -23,3 +23,7 @@ xcuserdata/
 !/shares/regtest/ln-backup/.keep
 /shares/regtest/lightning-api-certs/*
 !/shares/regtest/lightning-api-certs/.keep
+/shares/rtl-config/*
+!/shares/rtl-config/RTL-Config.json
+/shares/testnet/rtl-config/*
+!/shares/rtl-config/testnet/RTL-Config.json

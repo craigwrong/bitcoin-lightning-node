@@ -35,4 +35,4 @@ COPY --from=builder /opt/rtl/backend ./backend
 COPY --from=builder /opt/rtl/node_modules/ ./node_modules
 ENV RTL_CONFIG_PATH /root/rtl
 EXPOSE 3000
-ENTRYPOINT ["/sbin/tini", "-g", "--", "node", "rtl"]
+ENTRYPOINT ["/usr/bin/tini", "-g", "--", "node", "rtl"]

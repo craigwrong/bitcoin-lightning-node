@@ -14,23 +14,19 @@
       "lnImplementation": "CLN",
       "Authentication": {
         "macaroonPath": "/root/lightning-api-certs",
-        "configPath": "",
-        "swapMacaroonPath": "",
-        "boltzMacaroonPath": ""
+        "configPath": "/root/.lightning"
       },
       "Settings": {
-        "userPersona": "MERCHANT",
-        "themeMode": "DAY",
+        "userPersona": "OPERATOR",
+        "themeMode": "NIGHT",
         "themeColor": "PURPLE",
         "channelBackupPath": "",
         "logLevel": "ERROR",
-        "lnServerUrl": "https://10.1.0.4:3001",
-        "swapServerUrl": "",
-        "boltzServerUrl": "",
+        "lnServerUrl": "http://10.1.0.4:3001",
         "fiatConversion": false,
         "unannouncedChannels": false
       }
     }
   ],
-  "multiPass": "change-me"
+  "multiPassHashed": "27e4dcdbb505c008150ed070a3767c75852182b7f02288a664ce9974eb219b0b"
 }

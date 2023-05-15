@@ -10,27 +10,23 @@
   "nodes": [
     {
       "index": 1,
-      "lnNode": "VIOLETBOUNCE",
+      "lnNode": "TESTNET",
       "lnImplementation": "CLN",
       "Authentication": {
         "macaroonPath": "/root/lightning-api-certs",
-        "configPath": "",
-        "swapMacaroonPath": "",
-        "boltzMacaroonPath": ""
+        "configPath": "/root/.lightning"
       },
       "Settings": {
-        "userPersona": "MERCHANT",
-        "themeMode": "DAY",
+        "userPersona": "OPERATOR",
+        "themeMode": "NIGHT",
         "themeColor": "PURPLE",
         "channelBackupPath": "",
         "logLevel": "ERROR",
-        "lnServerUrl": "https://10.0.0.4:33001",
-        "swapServerUrl": "",
-        "boltzServerUrl": "",
+        "lnServerUrl": "http://10.0.0.4:33001",
         "fiatConversion": false,
         "unannouncedChannels": false
       }
     }
   ],
-  "multiPassHashed": "95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5"
+  "multiPassHashed": "2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b"
 }
