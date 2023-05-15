@@ -68,6 +68,13 @@ COPY --from=base /lib/x86_64-linux-gnu/libc.so.6 /lib/libc.so.6
 #COPY --from=base /lib64/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
 COPY --from=base /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
 
+#COPY --from=base /lib/aarch64-linux-gnu/libpthread.so.0 /lib/libpthread.so.0
+#COPY --from=base /lib/aarch64-linux-gnu/libm.so.6 /lib/libm.so.6
+#COPY --from=base /lib/aarch64-linux-gnu/libgcc_s.so.1 /lib/libgcc_s.so.1
+#COPY --from=base /lib/aarch64-linux-gnu/libc.so.6 /lib/libc.so.6
+#COPY --from=base /lib/aarch64-linux-gnu/ld-linux-aarch64.so.1  /lib/ld-linux-aarch64.so.1
+##COPY --from=base /lib/aarch64-linux-gnu/ld-2.31.so  /lib/ld-2.31.so
+
 FROM scratch as daemon-lean
 COPY --from=deps / /
 COPY --from=builder /opt/clightning-dist/bin/lightningd /bin/lightningd

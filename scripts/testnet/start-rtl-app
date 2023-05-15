@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --name rtl-app-testnet -d --restart unless-stopped --network bitcoind-testnet -p 33000:33000 -v $PWD/shares/testnet/rtl-config:/root/rtl -v $PWD/shares/testnet/lightning-api-certs:/root/lightning-api-certs rtl-app

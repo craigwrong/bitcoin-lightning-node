@@ -15,3 +15,11 @@ xcuserdata/
 !/shares/testnet/ln-backup/.keep
 /shares/testnet/lightning-api-certs/*
 !/shares/testnet/lightning-api-certs/.keep
+/shares/regtest/dot-bitcoin/*
+!/shares/regtest/dot-bitcoin/bitcoin.conf
+/shares/regtest/dot-lightning/*
+!/shares/regtest/dot-lightning/config
+/shares/regtest/ln-backup/*
+!/shares/regtest/ln-backup/.keep
+/shares/regtest/lightning-api-certs/*
+!/shares/regtest/lightning-api-certs/.keep

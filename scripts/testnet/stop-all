@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-docker stop ightning-api lightningd
+docker stop rtl-app-testnet lightning-api-testnet lightningd-testnet
 sleep 5
-docker stop bitcoind
+docker stop bitcoind-testnet

@@ -1,0 +1,36 @@
+{
+  "port": "33000",
+  "defaultNodeIndex": 1,
+  "dbDirectoryPath": "/root/rtl",
+  "SSO": {
+    "rtlSSO": 0,
+    "rtlCookiePath": "",
+    "logoutRedirectLink": ""
+  },
+  "nodes": [
+    {
+      "index": 1,
+      "lnNode": "VIOLETBOUNCE",
+      "lnImplementation": "CLN",
+      "Authentication": {
+        "macaroonPath": "/root/lightning-api-certs",
+        "configPath": "",
+        "swapMacaroonPath": "",
+        "boltzMacaroonPath": ""
+      },
+      "Settings": {
+        "userPersona": "MERCHANT",
+        "themeMode": "DAY",
+        "themeColor": "PURPLE",
+        "channelBackupPath": "",
+        "logLevel": "ERROR",
+        "lnServerUrl": "https://10.0.0.4:33001",
+        "swapServerUrl": "",
+        "boltzServerUrl": "",
+        "fiatConversion": false,
+        "unannouncedChannels": false
+      }
+    }
+  ],
+  "multiPassHashed": "95d30169a59c418b52013315fc81bc99fdf0a7b03a116f346ab628496f349ed5"
+}
