@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM node:16 as builder
-ENV RTL_VERSION=0.13.6
+ENV RTL_VERSION=0.14.0
 ENV SIGNATURE1=suheb
 WORKDIR /opt
 RUN \

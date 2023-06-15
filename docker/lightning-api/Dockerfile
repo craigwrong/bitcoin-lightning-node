@@ -1,12 +1,13 @@
 # syntax=docker/dockerfile:1
-FROM node:16-alpine
+FROM node:20-alpine
+ENV VERSION=0.10.3
 WORKDIR /root
-ADD https://github.com/Ride-The-Lightning/c-lightning-REST/archive/refs/tags/v0.9.0.tar.gz /root/
+ADD https://github.com/Ride-The-Lightning/c-lightning-REST/archive/refs/tags/v$VERSION.tar.gz /root/
 RUN \
     apk add --update openssl tini && \
     rm -rf /var/cache/apk/* && \
-    tar -xvf v0.9.0.tar.gz && \
-    mv c-lightning-REST-0.9.0 c-lightning-REST
+    tar -xvf v$VERSION.tar.gz && \
+    mv c-lightning-REST-$VERSION c-lightning-REST
 
 WORKDIR /root/c-lightning-REST
 RUN npm install --omit=dev

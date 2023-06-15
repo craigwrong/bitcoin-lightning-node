@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu as base
-ENV CORE_LIGHTNING_VERSION=v23.05.1
+ENV CORE_LIGHTNING_VERSION=v22.11.1
 RUN \
     apt-get update && \
     apt-get --yes upgrade
@@ -26,7 +26,6 @@ RUN \
     rm SHA256SUMS.asc SHA256SUMS && \
     unzip clightning-$CORE_LIGHTNING_VERSION.zip && \
     rm clightning-$CORE_LIGHTNING_VERSION.zip
-RUN wget -q -O plugins.zip https://codeload.github.com/lightningd/plugins/zip/refs/heads/master && unzip plugins.zip && rm plugins.zip && mv plugins-master plugins
 
 FROM base as builder
 COPY --from=prep /opt/clightning-$CORE_LIGHTNING_VERSION /opt/clightning-$CORE_LIGHTNING_VERSION
@@ -39,9 +38,22 @@ RUN \
     make && \
     make install
 
+FROM base as clboss-builder
+WORKDIR /root
+RUN \
+    apt-get --yes install --no-install-recommends ca-certificates wget build-essential pkg-config libev-dev libcurl4-gnutls-dev libsqlite3-dev && \
+    wget -qO- https://github.com/ZmnSCPxj/clboss/files/8596285/clboss-0.12.tar.gz | tar xzf - && \
+    cd clboss-0.12 && \
+    ./configure --prefix=/root && \
+    make && \
+    make install
+
 FROM base as daemon
+# Deps for CLBoss
+RUN \
+    apt-get --yes install --no-install-recommends dnsutils libev4 libcurl3-gnutls libsqlite3-0
 COPY --from=builder /opt/clightning-dist /clightning
-COPY --from=prep /opt/plugins /plugins
+COPY --from=clboss-builder /root/bin/clboss /usr/bin/clboss
 COPY --from=bitcoin-cli /bin/bitcoin-cli /usr/bin/bitcoin-cli
 WORKDIR /clightning
 COPY docker-entrypoint.sh /usr/bin/
