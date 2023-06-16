@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM debian as base
+FROM ubuntu as base
 ENV CORE_LIGHTNING_VERSION=v23.05.1
 RUN \
     apt-get update && \
@@ -22,7 +22,7 @@ RUN \
     wget -q https://github.com/ElementsProject/lightning/releases/download/$CORE_LIGHTNING_VERSION/SHA256SUMS.asc && \
     sha256sum --ignore-missing -c SHA256SUMS && \
     gpg --recv-keys $RUSTY_SIGNATURE $CHRISTIAN_SIGNATURE $CHRISTIAN2_SIGNATURE $LISA_SIGNATURE && \
-    gpg --status-fd 1 --verify SHA256SUMS.asc SHA256SUMS 2>/dev/null | grep -q "GOODSIG" || exit 1 && \
+    gpg --verify SHA256SUMS.asc SHA256SUMS && \
     rm SHA256SUMS.asc SHA256SUMS && \
     unzip clightning-$CORE_LIGHTNING_VERSION.zip && \
     rm clightning-$CORE_LIGHTNING_VERSION.zip
@@ -31,29 +31,32 @@ RUN wget -q -O plugins.zip https://codeload.github.com/lightningd/plugins/zip/re
 FROM base as builder
 COPY --from=prep /opt/clightning-$CORE_LIGHTNING_VERSION /opt/clightning-$CORE_LIGHTNING_VERSION
 WORKDIR /opt/clightning-$CORE_LIGHTNING_VERSION
-RUN apt-get --yes install --no-install-recommends autoconf automake build-essential libtool libgmp-dev libsqlite3-dev python3-pip python3-venv python-dev-is-python3 net-tools zlib1g-dev libsodium-dev gettext cargo rustfmt protobuf-compiler
-SHELL ["/bin/bash", "-c"]
 RUN \
-    python3 -m venv .venv && \
-    source .venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install mako && \
+    apt-get --yes install --no-install-recommends autoconf automake build-essential libtool libgmp-dev libsqlite3-dev python3 python3-pip net-tools zlib1g-dev libsodium-dev gettext cargo rustfmt protobuf-compiler && \
+    pip3 install --upgrade pip && \
+    pip3 install mako && \
     LDFLAGS="-static-libstdc++" ./configure  --prefix=/opt/clightning-dist --enable-rust --enable-static && \
     make && \
     make install
 
 FROM base as daemon
-RUN apt-get --yes install --no-install-recommends python3-pip python3-venv python-dev-is-python3 autoconf automake libtool make pkg-config
-WORKDIR /clightning
-SHELL ["/bin/bash", "-c"]
 RUN \
-    python3 -m venv .venv && \
-    source .venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install pyln-client
+    apt-get --yes install --no-install-recommends python3 python3-pip && \
+    pip3 install pyln-client
 COPY --from=builder /opt/clightning-dist /clightning
-COPY --from=bitcoin-cli /bin/bitcoin-cli /usr/bin/bitcoin-cli
 COPY --from=prep /opt/plugins /plugins
+
+# BROKEN!
+# bitcoin-cli: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.36' not found (required by bitcoin-cli)
+COPY --from=bitcoin-cli /bin/bitcoin-cli /usr/bin/bitcoin-cli
+
+#wget -q https://bitcoincore.org/bin/bitcoin-core-25.0/bitcoin-25.0-x86_64-linux-gnu.tar.gz
+# tar xvfz bitcoin-25.0-x86_64-linux-gnu.tar.gz 
+# mv bitcoin-25.0 /bitcoin
+# export PATH=$PATH:/bitcoin/bin
+#  ln -s /bitcoin/bin/bitcoin-cli /usr/bin/bitcoin-cli
+
+WORKDIR /clightning
 COPY docker-entrypoint.sh /usr/bin/
 VOLUME /root/.lightning
 ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
@@ -72,6 +75,15 @@ COPY --from=base /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-
 #COPY --from=base /lib/aarch64-linux-gnu/libc.so.6 /lib/libc.so.6
 #COPY --from=base /lib/aarch64-linux-gnu/ld-linux-aarch64.so.1  /lib/ld-linux-aarch64.so.1
 ##COPY --from=base /lib/aarch64-linux-gnu/ld-2.31.so  /lib/ld-2.31.so
+
+FROM scratch as daemon-lean
+COPY --from=deps / /
+COPY --from=builder /opt/clightning-dist/bin/lightningd /bin/lightningd
+COPY --from=builder /opt/clightning-dist/libexec /libexec
+COPY --from=clboss-builder /root/bin/clboss /bin/clboss
+COPY --from=bitcoin-cli /bin/bitcoin-cli /bin/bitcoin-cli
+VOLUME /.lightning
+ENTRYPOINT ["/bin/lightningd"]
 
 FROM scratch as cli
 COPY --from=deps / /

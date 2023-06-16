@@ -24,7 +24,8 @@
         "logLevel": "ERROR",
         "lnServerUrl": "http://10.1.0.4:3001",
         "fiatConversion": false,
-        "unannouncedChannels": false
+        "unannouncedChannels": false,
+        "enableOffers": true
       }
     }
   ],
