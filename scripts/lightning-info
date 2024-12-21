@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-docker run --rm --network bitcoind -v $PWD/shares/dot-lightning:/.lightning lightning-cli getinfo

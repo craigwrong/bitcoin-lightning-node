@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build --target daemon -t bitcoind ./docker/bitcoind
+docker build --target bitcoind -t bitcoind ./docker/bitcoind

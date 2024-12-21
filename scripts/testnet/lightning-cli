@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --rm --network bitcoin-test -v $PWD/shares/testnet/dot-lightning:/root/.lightning:ro lightning-cli $@

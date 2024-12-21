@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker network create bitcoin-testnet3 --subnet=10.2.0.0/24

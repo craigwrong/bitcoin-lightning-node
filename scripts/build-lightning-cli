@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build --target cli -t lightning-cli ./docker/lightningd
+docker build --target lightning-cli -t lightning-cli ./docker/lightningd

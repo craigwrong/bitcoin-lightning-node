@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build --target daemon -t lightningd ./docker/lightningd
+docker build --target lightningd -t lightningd ./docker/lightningd

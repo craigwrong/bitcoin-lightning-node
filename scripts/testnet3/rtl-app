@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --name test-rtl-app -d --restart unless-stopped --network bitcoin-testnet3 --ip 10.2.0.4 -p 33000:33000 -v $PWD/shares/testnet3/rtl-config:/root/rtl rtl-app

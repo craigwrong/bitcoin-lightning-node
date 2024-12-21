@@ -1,5 +1,11 @@
-network=testnet
-bitcoin-rpcconnect=10.0.0.2
-wallet=sqlite3:///root/.lightning/testnet/lightningd.sqlite3:/ln-backup/lightningd.sqlite3
-plugin=/plugins/feeadjuster/feeadjuster.py
+network=testnet4
+bitcoin-rpcconnect=10.1.0.2
+wallet=sqlite3:///root/.lightning/testnet4/lightningd.sqlite3:/ln-backup/lightningd.sqlite3
+
+clnrest-port=33001
+clnrest-protocol=http
+clnrest-host=0.0.0.0
+
+include /root/reckless/bitcoin-reckless.conf
+
 database-upgrade=true

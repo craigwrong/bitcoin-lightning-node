@@ -1,0 +1,2 @@
+# Copy to ./rune and add rune created with `./scripts/testnet3/lightning-info createrune` (or use showrunes)
+LIGHTNING_RUNE="<your-rune>"

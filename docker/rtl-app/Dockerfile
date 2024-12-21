@@ -1,13 +1,15 @@
 # syntax=docker/dockerfile:1
 
-FROM node:16 as builder
-ENV RTL_VERSION=0.14.0
+ARG BASE_DISTRO="node:alpine"
+
+FROM --platform=${BUILDPLATFORM} ${BASE_DISTRO} AS builder
+ENV RTL_VERSION=0.15.4
 ENV SIGNATURE1=suheb
 WORKDIR /opt
 RUN \
-    apt-get update && \
-    apt-get --yes upgrade && \
-    apt-get --yes install --no-install-recommends wget ca-certificates gnupg && \
+    apk update && \
+    apk upgrade && \
+    apk add --no-cache gnupg && \
     wget -q https://github.com/Ride-The-Lightning/RTL/archive/refs/tags/v$RTL_VERSION.tar.gz && \
     wget -q https://github.com/Ride-The-Lightning/RTL/releases/download/v$RTL_VERSION/v$RTL_VERSION.tar.gz.asc && \
     wget -O - https://keybase.io/$SIGNATURE1/pgp_keys.asc | gpg --import && \
@@ -22,12 +24,12 @@ RUN \
     npm run buildbackend && \
     npm prune --omit=dev --legacy-peer-deps
 
-FROM node:16 as runner
-WORKDIR /opt/rtl
+FROM --platform=${TARGETPLATFORM} ${BASE_DISTRO} AS runner
 RUN \
-    apt-get update && \
-    apt-get --yes upgrade && \
-    apt-get --yes install --no-install-recommends tini
+    apk update && \
+    apk upgrade && \
+    apk add --no-cache tini
+WORKDIR /opt/rtl
 COPY --from=builder /opt/rtl/rtl.js ./rtl.js
 COPY --from=builder /opt/rtl/package.json ./package.json
 COPY --from=builder /opt/rtl/frontend ./frontend
@@ -35,4 +37,5 @@ COPY --from=builder /opt/rtl/backend ./backend
 COPY --from=builder /opt/rtl/node_modules/ ./node_modules
 ENV RTL_CONFIG_PATH /root/rtl
 EXPOSE 3000
-ENTRYPOINT ["/usr/bin/tini", "-g", "--", "node", "rtl"]
+ENTRYPOINT ["/sbin/tini", "-g", "--"]
+CMD ["node", "rtl"]

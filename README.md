@@ -5,9 +5,8 @@ Configuration for running a Bitcoin and Lightning Network node on a single machi
 ## Features
 
 - Bitcoin Core
-- C-Lightning
-- CLBoss C-Lightning plugin
-- c-lightning-REST Lightning API
+- Core Lightning with CLNREST and other reckless plugins
+- Ride The Lightning web application
 
 ## Getting started
 
@@ -19,14 +18,12 @@ cd bitcoin-lightning-node
 scripts/build-bitcoind
 scripts/build-bitcoin-cli
 scripts/build-lightningd
-scripts/build-lightning-api
 scripts/setup-docker
-scripts/start-bitcoind
-scripts/bitcoin-info
-scripts/start-lightningd
-scripts/lightning-info
-scripts/start-lightning-api
-scripts/lightning-api-info
+scripts/bitcoind
+scripts/bitcoin-cli
+scripts/lightningd
+scripts/lightning-cli getinfo
+scripts/lightning-api
 ```
 
 To stop and cleanup:
@@ -40,12 +37,12 @@ There is a `scripts/testnet` subfolder for commands that differ from their mainn
 
 ```sh
 scripts/testnet/setup-docker
-scripts/testnet/start-bitcoind
-scripts/testnet/bitcoin-info
-scripts/testnet/start-lightningd
-scripts/testnet/lightning-info
-scripts/testnet/start-lightning-api
-scripts/testnet/lightning-api-info
+scripts/testnet/bitcoind
+scripts/testnet/bitcoin-cli
+scripts/testnet/lightningd
+scripts/testnet/lightning-cli getinfo
+scripts/testnet/lightning-api
+scripts/testnet/rtl-app
 ```
 
 To stop and cleanup:
@@ -58,7 +55,17 @@ To stop and cleanup:
 
 To build images and run containers on an ARM-based Mac for x86 pass `--platform linux/amd64` to the docker command.
 
-For better x86 emulation performance use `colima` which supports Rosetta 2 and Virtualization Framework (as opposed to Docker Desktop's use of QEMU). Make sure you install Rosetta as well.
+    docker build --platform linux/arm64,linux/amd64 --target bitcoind -t bitcoind ./docker/bitcoind
+    docker build --platform linux/arm64,linux/amd64 --target bitcoin-cli -t bitcoin-cli ./docker/bitcoind
+    docker build --platform linux/arm64,linux/amd64 --target lightningd -t lightningd ./docker/lightningd
+    docker build --platform linux/arm64,linux/amd64 --target lightning-cli -t lightning-cli ./docker/lightningd
+    docker build --platform linux/arm64,linux/amd64 -t rtl-app ./docker/rtl-app
+    docker image ls --tree
+
+
+### Colima
+
+For alternative x86 emulation performance use `colima` which supports Rosetta 2 and Virtualization Framework (as opposed to Docker Desktop's use of QEMU). Make sure you install Rosetta as well.
 
     brew install colima --HEAD
     colima start --arch aarch64 --vm-type=vz --vz-rosetta  --cpu 4 --memory 8
@@ -78,5 +85,17 @@ We can build the docker images on a workstation and then transfer them to the se
     docker load -i bitcoind.tgz
 
 When building on a different architecture/platform like an Apple Silicon Mac, make sure you pass the `--platform=linux/amd64` to the Docker commands if that's your target (i.e. server) system.
+
+### ARM -> x86
+
+To save all images and move them to another machine:
+
+    docker save bitcoind | gzip > bitcoind.tgz
+    docker save bitcoin-cli | gzip > bitcoin-cli.tgz
+    docker save lightningd | gzip > lightningd.tgz   
+    docker save lightning-cli | gzip > lightning-cli.tgz 
+    docker save rtl-app | gzip > rtl-app.tgz   
+
+    scp *.tgz toximaxi:/home/satoshi
 
 On ARM Macs we can use _Lima_ / _Colima_ and _Rossetta 2_ to emulate x86 efficiently and target said platform.

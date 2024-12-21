@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --rm --network bitcoin-main -v $PWD/shares/dot-lightning:/root/.lightning:ro lightning-cli $@

@@ -22,7 +22,7 @@
         "themeColor": "PURPLE",
         "channelBackupPath": "",
         "logLevel": "ERROR",
-        "lnServerUrl": "http://10.0.0.4:33001",
+        "lnServerUrl": "http://10.1.0.4:33001",
         "fiatConversion": false,
         "unannouncedChannels": false
       }

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --rm --network bitcoin-test -v $PWD/shares/testnet/dot-bitcoin/testnet4/.cookie:/root/.bitcoin/testnet4/.cookie bitcoin-cli -testnet4 -rpcconnect=10.1.0.2 ${1:--getinfo} ${@:2}

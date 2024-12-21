@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if [ $# -eq 0 ]
+  then
+    echo "Rune parameter missing."
+    echo
+    echo "Use the following command to create a rune:"
+    echo
+    echo "./scripts/testnet/lightning-cli createrune"
+    echo
+    echo "Currently available runes (showrunes output):"
+    echo
+    source $(dirname "$0")/lightning-cli showrunes --human-readable --filter='{"runes":[{"rune":true}]}'
+    exit 1
+fi
+
+docker run --rm --network bitcoin-test curlimages/curl -s -X 'POST' \
+  'http://10.1.0.3:33001/v1/getinfo' \
+  -H 'accept: application/json' \
+  -H "Rune: $1"

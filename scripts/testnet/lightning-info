@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-docker run --rm --network bitcoind-testnet -v $PWD/shares/testnet/dot-lightning:/.lightning lightning-cli getinfo

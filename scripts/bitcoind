@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --name bitcoind -d --restart unless-stopped --network bitcoin-main --ip 10.0.0.2 -v $PWD/shares/dot-bitcoin:/root/.bitcoin -v /TIMECHAIN:/TIMECHAIN bitcoind

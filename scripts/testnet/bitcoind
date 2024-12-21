@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --name test-bitcoind -d --restart unless-stopped --network bitcoin-test --ip 10.1.0.2 -v $PWD/shares/testnet/dot-bitcoin:/root/.bitcoin bitcoind

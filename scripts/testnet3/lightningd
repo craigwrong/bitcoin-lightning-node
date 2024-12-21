@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --name test-lightningd -d --restart unless-stopped --network bitcoin-testnet3 --ip 10.2.0.3 -v $PWD/shares/testnet3/dot-lightning:/root/.lightning -v $PWD/shares/testnet3/ln-backup:/ln-backup -v $PWD/shares/testnet3/dot-bitcoin/testnet3:/root/.bitcoin/testnet3:ro lightningd

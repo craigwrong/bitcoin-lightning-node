@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -e
 sleep 5
-source ./.venv/bin/activate
-exec ./bin/lightningd "$@"
+
+#source ./.venv/bin/activate
+
+#exec ./bin/lightningd "$@"
+exec /usr/local/bin/lightningd "$@"

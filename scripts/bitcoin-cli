@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --rm --network bitcoin-main -v /TIMECHAIN/.cookie:/root/.bitcoin/.cookie bitcoin-cli -rpcconnect=10.0.0.2 ${1:--getinfo} ${@:2}
