@@ -51,7 +51,7 @@ To stop and cleanup:
     scripts/testnet/clean-all
 
 
-## Cross-Compiling from macOS (Apple Sillicon) to x86
+## Cross-Compiling from macOS (Apple Silcon) to x86
 
 To build images and run containers on an ARM-based Mac for x86 pass `--platform linux/amd64` to the docker command.
 
@@ -84,6 +84,12 @@ We can build the docker images on a workstation and then transfer them to the se
     docker save bitcoind | gzip > bitcoind.tgz
     docker load -i bitcoind.tgz
 
+Or if you want a single platform from a multi-platform archive:
+
+    docker import --platform linux/amd64 bitcoind.tgz
+
+Unfortunately there's been some issues with this technique so we are stuck with building for target platform only and using save/load docker commands. You may use a different image name if you have some containers running locally.
+
 When building on a different architecture/platform like an Apple Silicon Mac, make sure you pass the `--platform=linux/amd64` to the Docker commands if that's your target (i.e. server) system.
 
 ### ARM -> x86
@@ -98,4 +104,4 @@ To save all images and move them to another machine:
 
     scp *.tgz toximaxi:/home/satoshi
 
-On ARM Macs we can use _Lima_ / _Colima_ and _Rossetta 2_ to emulate x86 efficiently and target said platform.
+On ARM Macs we can use _Lima_ / _Colima_ and _Rosetta 2_ to emulate x86 efficiently and target said platform.
