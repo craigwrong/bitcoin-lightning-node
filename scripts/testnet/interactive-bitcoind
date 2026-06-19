@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+rm -rf shares/testnet/dot-bitcoin/testnet4/.cookie
+docker run --name test-bitcoind --rm -it --network bitcoin-test --ip 10.1.0.2 -v $PWD/shares/testnet/dot-bitcoin:/root/.bitcoin bitcoind

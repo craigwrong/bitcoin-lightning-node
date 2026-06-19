@@ -1,12 +1,10 @@
-# syntax=docker/dockerfile:1
-
-FROM debian as base
+FROM ubuntu as base
 RUN \
     apt-get update && \
-    apt-get --yes upgrade
+    apt-get -y upgrade
 
 FROM base as prep
-ENV BITCOIN_CORE_VERSION=25.0
+ENV BITCOIN_CORE_VERSION=31.0
 # Pieter Wuille
 ENV SIGNATURE1=133EAC179436F14A5CF1B794860FEB804E669320
  # Michael Ford
@@ -15,7 +13,7 @@ ENV SIGNATURE2=E777299FC265DD04793070EB944D35F9AC3DB76A
 ENV SIGNATURE3=152812300785C96444D3334D17565732E08E5E41
 WORKDIR /opt
 RUN \
-    apt-get --yes install --no-install-recommends wget ca-certificates unzip gnupg autoconf automake pkg-config libtool && \
+    DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install build-essential cmake pkgconf python3 libevent-dev libboost-dev libsqlite3-dev && \
     wget -q https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_CORE_VERSION/bitcoin-$BITCOIN_CORE_VERSION.tar.gz && \
     wget -q https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_CORE_VERSION/SHA256SUMS && \
     wget -q https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_CORE_VERSION/SHA256SUMS.asc && \
@@ -27,7 +25,8 @@ RUN \
     rm bitcoin-$BITCOIN_CORE_VERSION.tar.gz && \
     mv bitcoin-$BITCOIN_CORE_VERSION bitcoin && \
     cd bitcoin && \
-    ./autogen.sh
+    cmake -B build -DENABLE_IPC=OFF && \
+    cmake --build build
 
 FROM base as builder-base
 RUN apt-get --yes install --no-install-recommends make g++ binutils
